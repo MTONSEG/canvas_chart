@@ -1,0 +1,104 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body,
+section {
+	display: flex;
+	flex-direction: column;
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	min-height: 100vh;
+}
+
+section {
+	height: 100vh;
+}
+
+h1 {
+	text-align: center;
+	margin: 10px;
+}
+
+.container {
+	flex: 1 1 auto;
+	display: flex;
+	align-items: center;
+	padding: 40px;
+}
+
+canvas {
+	display: block;
+	margin: 0 auto;
+}
+
+.table {
+	border: 1px solid black;
+	padding: 0 40px;
+	position: relative;
+}
+
+.table__btn-wrap {
+	padding: 7.5px;
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+
+.btn,
+.refresh-btn {
+	background: white;
+	padding: 4px;
+	border: 1px solid transparent;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.refresh-btn {
+	position: absolute;
+	top: 7px;
+	right: 10px;
+}
+
+.table__year {
+	display: flex;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	padding: 7px 0;
+}
+
+.table__year li,
+.table__values li {
+	list-style-type: none;
+	text-align: center;
+}
+
+.table__values {
+	position: absolute;
+	top: 34px;
+	left: 0;
+	width: 35px;
+	height: calc(100% - 33px);
+	display: flex;
+	flex-direction: column-reverse;
+}
+
+.table__values li {
+	text-align: right;
+	height: 40px;
+}
+
+.tooltip {
+    position: absolute;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    pointer-events: none; /* Чтобы избежать мерцания при перемещении мыши */
+}

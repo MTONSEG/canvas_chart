@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+	<link rel="stylesheet" href="style.css" />
+	<body>
+		<section>
+			<h1>Bar Vertivel</h1>
+
+			<div class="container">
+				<div class="table">
+					<button class="refresh-btn">Refresh</button>
+
+					<div class="table__btn-wrap">
+						<button class="btn" data-set="apple">Apple</button>
+						<button class="btn" data-set="xiaomi">Xiaomi</button>
+						<button class="btn" data-set="samsung">Samsung</button>
+						<button class="btn" data-set="nokia">Nokia</button>
+					</div>
+
+					<canvas id="canvas"></canvas>
+					
+					<ul class="table__year">
+						<li>2019</li>
+						<li>2020</li>
+						<li>2021</li>
+						<li>2022</li>
+						<li>2023</li>
+					</ul>
+
+					<ul class="table__values">
+						<li>0</li>
+						<li>10</li>
+						<li>20</li>
+						<li>30</li>
+						<li>40</li>
+						<li>50</li>
+						<li>60</li>
+						<li>70</li>
+						<li>80</li>
+						<li>90</li>
+						<li>100</li>
+					</ul>
+
+					<!-- <div class="tooltip"></div> -->
+				</div>
+			</div>
+		</section>
+
+		<script type="module" src="app.js" defer></script>
+	</body>
+</html>
