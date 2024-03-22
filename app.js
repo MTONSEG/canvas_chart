@@ -2,6 +2,7 @@ const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 const buttons = document.querySelectorAll('.btn')
 const refreshBtn = document.querySelector('.refresh-btn')
+const tooltip = document.querySelector('.tooltip')
 
 canvas.width = 700
 canvas.height = 400
@@ -9,7 +10,7 @@ canvas.height = 400
 const w = canvas.width
 const h = canvas.height
 const gap = 5
-const amountYears = 5
+const countYear = 5
 
 const data = {
 	apple: {
@@ -46,8 +47,8 @@ function createData() {
 
 		if (current.length) current.length = 0
 
-		for (let i = 0; i < amountYears; i++) {
-			current.push(setYearData())
+		for (let i = 0; i < countYear; i++) {
+			current.push({ value: setYearData() })
 		}
 	}
 }
@@ -58,7 +59,7 @@ function init() {
 	ctx.rect(0, 0, w, h)
 	ctx.stroke()
 
-	for (let i = 0, x = w / amountYears; x < w; i++, x += w / amountYears) {
+	for (let i = 0, x = w / countYear; x < w; i++, x += w / countYear) {
 		setLine(x, 0, x, h)
 	}
 
@@ -87,23 +88,36 @@ function drawDiagram() {
 	const list = []
 
 	for (let key in data) {
+		const year = data[key].yearData
+		const colors = data[key].colors
+
 		if (data[key].show) {
-			list.push({ value: data[key].yearData, colors: data[key].colors })
+			list.push({ year, colors })
 		}
 	}
 
 	for (
 		let k = 0, d = 0;
 		k < list.length;
-		k++, d += w / amountYears / list.length
+		k++, d += w / countYear / list.length
 	) {
-		for (let i = 0, x = 0; i < amountYears; i++, x += w / amountYears) {
+		for (let i = 0, x = 0; i < countYear; i++, x += w / countYear) {
 			ctx.fillStyle = list[k].colors[0]
 			ctx.strokeStyle = list[k].colors[1]
 
 			const positionX = x + gap + d
-			const positionY = getValue(list[k].value[i])
-			const columnWidth = w / amountYears / list.length - gap * 2
+			const positionY = getValue(list[k].year[i].value)
+			const columnWidth = w / countYear / list.length - gap * 2
+
+			const columnData = {
+				value: list[k].year[i].value,
+				x: positionX,
+				y: positionY,
+				w: columnWidth,
+				h
+			}
+
+			list[k].year[i] = columnData
 
 			setGraph(positionX, positionY, columnWidth, h)
 		}
@@ -144,4 +158,35 @@ canvas.onmousemove = (e) => {
 	const mouseX = e.offsetX
 	const mouseY = e.offsetY
 
+	for (let key in data) {
+		const { yearData, colors } = data[key]
+
+		if (data[key].show) {
+			for (let i = 0; i < countYear; i++) {
+				const column = yearData[i]
+
+				if (
+					mouseX > column.x &&
+					mouseX < column.x + column.w &&
+					mouseY > column.y &&
+					mouseY < h
+				) {
+					tooltip.innerHTML = `
+					${toUpperFirstLetter(key)}: ${column.value}`
+
+					tooltip.style.display = 'block'
+					tooltip.style.background = colors[1]
+					tooltip.style.left = e.pageX + 10 + 'px'
+					tooltip.style.top = e.pageY + 10 + 'px'
+					return
+				}
+			}
+		}
+	}
+
+	tooltip.style.display = 'none'
+}
+
+function toUpperFirstLetter(text) {
+	return text.charAt(0).toUpperCase() + text.slice(1)
 }
