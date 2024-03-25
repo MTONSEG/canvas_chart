@@ -9,7 +9,24 @@
 	<link rel="stylesheet" href="style.css" />
 	<body>
 		<section>
-			<h1>Bar Vertivel</h1>
+			<h1>Pie chart</h1>
+
+			<div class="container">
+				<canvas id="pie"></canvas>
+
+				<div class="table__btn-wrap">
+					<button class="btn" data-set="apple">Apple</button>
+					<button class="btn" data-set="xiaomi">Xiaomi</button>
+					<button class="btn" data-set="samsung">Samsung</button>
+					<button class="btn" data-set="nokia">Nokia</button>
+				</div>
+			</div>
+
+			<div id="pie-tooltip" class="tooltip"></div>
+		</section>
+
+		<section>
+			<h1>Bar Vertical</h1>
 
 			<div class="container">
 				<div class="table">
@@ -22,7 +39,7 @@
 						<button class="btn" data-set="nokia">Nokia</button>
 					</div>
 
-					<canvas id="canvas"></canvas>
+					<canvas id="vertical"></canvas>
 
 					<ul class="table__year">
 						<li>2019</li>
@@ -47,8 +64,11 @@
 					</ul>
 				</div>
 			</div>
+
+			<div id="vertical-tooltip"  class="tooltip"></div>
 		</section>
-		<div class="tooltip"></div>
-		<script type="module" src="app.js" defer></script>
+		<script type="module" src="script.js" defer></script>
+		<!-- <script type="module" src="app2.js" defer></script> -->
+		<!-- <script type="module" src="app.js" defer></script> -->
 	</body>
 </html>

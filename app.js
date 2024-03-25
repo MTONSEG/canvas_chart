@@ -1,4 +1,4 @@
-const canvas = document.querySelector('canvas')
+const canvas = document.querySelector('canvas#vertical')
 const ctx = canvas.getContext('2d')
 const buttons = document.querySelectorAll('.btn')
 const refreshBtn = document.querySelector('.refresh-btn')

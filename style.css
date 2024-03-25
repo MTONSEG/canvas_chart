@@ -34,7 +34,10 @@ h1 {
 
 canvas {
 	display: block;
-	margin: 0 auto;
+}
+
+#pie {
+	border: 1px solid black;
 }
 
 .table {
@@ -95,6 +98,7 @@ canvas {
 
 .tooltip {
     position: absolute;
+		z-index: 10;
     display: none;
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
