@@ -2,6 +2,10 @@ export class PieChart {
 	constructor(canvasId, data) {
 		this.canvas = document.getElementById(canvasId)
 		this.ctx = this.canvas.getContext('2d')
+		this.tooltip = document.querySelector('#pie-tooltip')
+		this.updateBtn = document.querySelector('.pie-btn#update')
+		this.addBtn = document.querySelector('.pie-btn#add')
+
 		this.canvas.width = 700
 		this.canvas.height = 400
 		this.w = this.canvas.width
@@ -11,9 +15,11 @@ export class PieChart {
 
 		this.init(true)
 		this.drawPieChart()
+
 		this.canvas.addEventListener('click', this.handleClick.bind(this))
 		this.canvas.addEventListener('mousemove', this.handleMouseMove.bind(this))
-		this.tooltip = document.querySelector('#pie-tooltip')
+		this.updateBtn.addEventListener('click', this.handleUpdate.bind(this))
+		this.addBtn.addEventListener('click', this.handleAddData.bind(this))
 	}
 
 	init(isSetup) {
@@ -21,7 +27,9 @@ export class PieChart {
 
 		for (let key in this.data) {
 			const current = this.data[key]
+
 			this.ctx.fillStyle = current.color
+
 			current.button = this.drawButton(
 				...positionBtn,
 				30,
@@ -33,22 +41,13 @@ export class PieChart {
 			positionBtn[1] += 20
 
 			if (isSetup) {
-				current.value = this.setData()
+				current.value = this.setValue()
 			}
 		}
 	}
 
-	setData() {
+	setValue() {
 		return Math.floor(Math.random() * 30) + 1
-	}
-
-	drawPieSlice(centerX, centerY, radius, startAngle, endAngle, color) {
-		this.ctx.fillStyle = color
-		this.ctx.beginPath()
-		this.ctx.moveTo(centerX, centerY)
-		this.ctx.arc(centerX, centerY, radius, startAngle, endAngle)
-		this.ctx.closePath()
-		this.ctx.fill()
 	}
 
 	drawPieChart() {
@@ -63,26 +62,27 @@ export class PieChart {
 		let startAngle = 0
 
 		for (let key in this.data) {
-			if (this.data[key].show) {
-				const sliceAngle = (this.data[key].value / totalValue) * 2 * Math.PI
+			if (!this.data[key].show) continue
 
-				const segmentPosition = {
-					x: this.w / 2,
-					y: this.h / 2,
-					r: this.r,
-					startAngle,
-					endAngle: startAngle + sliceAngle
-				}
+			const sliceAngle = (this.data[key].value / totalValue) * 2 * Math.PI
+			const path = new Path2D()
 
-				this.data[key].segment = { ...segmentPosition }
+			path.moveTo(this.w / 2, this.h / 2)
+			path.arc(
+				this.w / 2,
+				this.h / 2,
+				this.r,
+				startAngle,
+				startAngle + sliceAngle
+			)
+			path.closePath()
 
-				this.drawPieSlice(
-					...Object.values(segmentPosition),
-					this.data[key].color
-				)
+			this.ctx.fillStyle = this.data[key].color
+			this.ctx.fill(path)
 
-				startAngle += sliceAngle
-			}
+			this.data[key].path = path
+
+			startAngle += sliceAngle
 		}
 	}
 
@@ -111,9 +111,9 @@ export class PieChart {
 		}
 	}
 
-	handleClick(event) {
-		const mouseX = event.clientX - this.canvas.getBoundingClientRect().left
-		const mouseY = event.clientY - this.canvas.getBoundingClientRect().top
+	handleClick(e) {
+		const mouseX = e.clientX - this.canvas.getBoundingClientRect().left
+		const mouseY = e.clientY - this.canvas.getBoundingClientRect().top
 
 		for (let key in this.data) {
 			if (this.isInsideButton(mouseX, mouseY, this.data[key].button)) {
@@ -146,31 +146,38 @@ export class PieChart {
 		const mouseY = e.clientY - this.canvas.getBoundingClientRect().top
 
 		for (let key in this.data) {
-			if (this.data[key].show) {
-				const { x, y, startAngle, endAngle } = this.data[key].segment
-
-				const dx = mouseX - x
-				const dy = mouseY - y
-
-				let angle = Math.atan2(dy, dx)
-
-				angle = angle < 0 ? angle + 2 * Math.PI : angle
-
-				const isClockwise = startAngle > endAngle
-				const isInSegment = isClockwise
-					? angle >= startAngle || angle <= endAngle
-					: angle >= startAngle && angle <= endAngle
-
-				if (isInSegment) {
-					this.tooltip.innerHTML = `${key}: ${this.data[key].value}`
-					this.tooltip.style.left = e.pageX + 10 + 'px'
-					this.tooltip.style.top = e.pageY + 10 + 'px'
-					this.tooltip.style.display = 'block'
-					return
-				}
+			if (
+				this.data[key].show &&
+				this.ctx.isPointInPath(this.data[key].path, mouseX, mouseY)
+			) {
+				this.tooltip.innerHTML = `${key}: ${this.data[key].value}`
+				this.tooltip.style.left = e.pageX + 10 + 'px'
+				this.tooltip.style.top = e.pageY + 10 + 'px'
+				this.tooltip.style.display = 'block'
+				this.tooltip.style.background = 'black'
+				return
 			}
 		}
 
 		this.tooltip.style.display = 'none'
+	}
+
+	handleUpdate() {
+		this.ctx.clearRect(0, 0, this.w, this.h)
+
+		this.init(true)
+		this.drawPieChart()
+	}
+
+	handleAddData() {
+		this.data.violet = {
+			color: 'violet',
+			value: null,
+			show: true,
+			button: null
+		}
+
+		this.init(true)
+		this.drawPieChart()
 	}
 }

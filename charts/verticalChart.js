@@ -1,10 +1,11 @@
 export class VerticalBarChart {
-	constructor(canvasId, buttonsClass, refreshBtnClass, tooltipClass, data) {
+	constructor(canvasId, data) {
 		this.canvas = document.getElementById(canvasId)
 		this.ctx = this.canvas.getContext('2d')
-		this.buttons = document.querySelectorAll(buttonsClass)
-		this.refreshBtn = document.querySelector(refreshBtnClass)
-		this.tooltip = document.querySelector(tooltipClass)
+		this.buttons = document.querySelectorAll('.btn')
+		this.refreshBtn = document.querySelector('.refresh-btn')
+		this.tooltip = document.querySelector('.tooltip')
+
 		this.data = data
 		this.canvas.width = 700
 		this.canvas.height = 400
@@ -97,7 +98,7 @@ export class VerticalBarChart {
 				const positionX = x + this.gap + d
 				const positionY = this.getValue(list[k].year[i].value)
 				const columnWidth = this.w / this.countYear / list.length - this.gap * 2
-
+				
 				const columnData = {
 					value: list[k].year[i].value,
 					x: positionX,
