@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 	// })
 
-	gsap.to('.vartical-section', {
-		scrollTrigger: {
-			trigger: '.vartical-section',
-			markers: true,
-		},
-		duration: 1,
-		opacity: 1
-	})
+	// gsap.to('.vartical-section', {
+	// 	scrollTrigger: {
+	// 		trigger: '.vartical-section',
+	// 		markers: true,
+	// 	},
+	// 	duration: 1,
+	// 	opacity: 1
+	// })
 })

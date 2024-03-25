@@ -13,6 +13,7 @@ export class VerticalBarChart {
 		this.h = this.canvas.height
 		this.gap = 5
 		this.countYear = 5
+		this.isActiveBtn = true
 
 		this.canvas.addEventListener('mousemove', this.handleMouseMove.bind(this))
 		this.refreshBtn.addEventListener('click', this.handleRefresh.bind(this))
@@ -59,6 +60,7 @@ export class VerticalBarChart {
 			btn.onclick = () => {
 				this.data[dataset].show = !this.data[dataset].show
 				this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+
 				this.init()
 				this.drawDiagram()
 			}
@@ -92,24 +94,33 @@ export class VerticalBarChart {
 				i < this.countYear;
 				i++, x += this.w / this.countYear
 			) {
-				this.ctx.fillStyle = list[k].colors[0]
-				this.ctx.strokeStyle = list[k].colors[1]
-
 				const positionX = x + this.gap + d
 				const positionY = this.getValue(list[k].year[i].value)
 				const columnWidth = this.w / this.countYear / list.length - this.gap * 2
-				
+
 				const columnData = {
 					value: list[k].year[i].value,
 					x: positionX,
-					y: positionY,
+					y: this.h, 
 					w: columnWidth,
-					h: this.h
+					h: positionY 
 				}
 
-				list[k].year[i] = columnData
+				gsap.to(columnData, {
+					duration: .3, 
+					y: positionY, 
+					h: this.h - positionY,
+					onUpdate: () => {
+						this.ctx.fillStyle = list[k].colors[0]
+						this.ctx.strokeStyle = list[k].colors[1]
 
-				this.setGraph(positionX, positionY, columnWidth, this.h)
+						this.setGraph(positionX, columnData.y, columnWidth, columnData.h)
+						console.log('test')
+					},
+					onComplete: () => {
+						list[k].year[i] = columnData
+					}
+				})
 			}
 		}
 	}
